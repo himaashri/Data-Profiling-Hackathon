@@ -14,6 +14,9 @@ data:
   features_median: src/resources/dataInput/processedData/features_median.csv
   encoding_file: src/resources/dataInput/processedData/encoding_file.csv
   prompt: src/resources/dataInput/prompt.txt
+  instructions: src/resources/dataInput/Instruction.txt
+  column_instructions: src/resources/dataInput/column_instructions.txt
+  final_prompt: src/resources/dataInput/final_prompt.txt
   validation_code: src/main/hackathon/models/validations/validations.py
   test_data_size: 0.15
   random_state: 42

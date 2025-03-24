@@ -6,62 +6,6 @@ Accept an anomalies dataset in CSV format as input.
 Apply pre-defined validation rules directly derived from a list of instructions in a file named sample-inst.txt.
 The col-desc.txt file contains descriptions for each field present in the anomalies dataset and is provided for a functional understanding, but should not directly influence the function code.
 
-Below are the details of the input files:
-
-Instructions file: sample-inst.txt
-“”"
-Regulatory Reporting Instructions (Enhanced Complexity)
-
-- AmortizedCost_USDEquivalent should closely align with MarketValue_USDEquivalent, with deviations exceeding 20% flagged for review.
-
-- AccountingIntent must be one of the following: HTM, AFS, or EQ. Any other classification will trigger a validation error.
-
-- TypeOfHedge must be 1, 2, or 3, with any other value leading to an error flag.
-
-- HedgePercentage should remain between 0% and 100%. Percentages outside this range will generate an alert.
-
-- HedgeInterestRate must be a non-negative value and not exceed 100%. Invalid rates will be reported.
-
-- HedgeHorizon should not precede the current reporting date. Any past date will result in a validation message.
-
-- HedgingInstrumentAtFairValue must be positive. A zero or negative value triggers an anomaly alert.
-
-- EffectivePortionOfCumulativeGainsAndLosses exceeding 50% of HedgingInstrumentAtFairValue will flag an error for further review.
-
-- HedgeHorizon older than 10 years from the current date should be reviewed to ensure compliance with reporting policies.
-
-- Sidedness should be either 1 or 2. Any other value should be flagged as an invalid entry.
-
-- HedgedRisk values should match the predefined regulatory risk categories. Any deviation should be flagged for compliance checks.
-
-- ASU2017-12HedgeDesignations should be within accepted hedge designation categories. Any mismatched designation should trigger a validation alert.
-
-- Multiple validation messages will be generated if a single record violates more than one rule.
-
-These instructions ensure accurate identification and reporting of anomalies for regulatory compliance.
-
-
-“”"
-
-Column descriptions file: col-desc.txt
-“”"
-IdentifierType: The type of identifier for the security. Example: CUSIP, ISIN.
-IdentifierValue: The unique value identifying the security. Example: 123456789 (CUSIP), US1234567890 (ISIN).
-AmortizedCost_USDEquivalent: The amortized cost of the hedged security in USD. Example: 25,000,000.
-MarketValue_USDEquivalent: The market value of the security in USD. Example: 26,500,000.
-AccountingIntent: The classification of the security—Available-for-Sale (AFS), Held-to-Maturity (HTM), or Equity (EQ). Example: AFS.
-TypeOfHedge: Specifies whether the hedge is for fair value or cash flow. Example: 1 (Fair Value Hedge).
-HedgedRisk: The specific risk being hedged, such as interest rate or credit risk. Example: 2 (Interest Rate Risk).
-HedgeInterestRate: The benchmark interest rate for hedging interest rate risk. Example: 1 (US Treasury Security Interest Rate).
-HedgePercentage: The portion of the asset being hedged, expressed as a decimal. Example: 0.75 (75%).
-HedgeHorizon: The remaining timeline of the hedge effectiveness or covered transactions. Example: 2027-12-31.
-HedgedCashFlow: Indicates the type of cash flow, e.g., principal, interest, or both. Example: 1 (Principal and Interest Cash Flows).
-Sidedness: Whether the hedging instrument offsets risk one-sidedly. Example: 1 (One-sided).
-HedgingInstrumentAtFairValue: The USD-equivalent fair value of the hedging instrument. Example: -5,000,000.
-EffectivePortionOfCumulativeGainsAndLosses: The USD gain/loss related to the hedge. Example: -300,000.
-ASU2017-12HedgeDesignations: Designations under ASU 2017-12, such as "Last-of-Layer." Example: 1 (Last-of-Layer).
-“”"
-
 Requirements:
 
 The function should be well-documented with docstrings explaining the purpose and logic of each step.
@@ -70,3 +14,5 @@ The validation rules once applied on the provided anomalies dataset. And each re
 
 Please generate the Python function according to the guidelines above.
 do not give any comments. I want only code.
+
+Below are the details of the input files:
