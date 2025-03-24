@@ -1,44 +1,42 @@
 import pickle
-from hackathon.common.utils.utils import convert_datetime_features, frequency_ranking_encode
-from hackathon.factory.Abstract_class import AbstractProduct
+from src.main.hackathon.common.utils.utils import convert_datetime_features, frequency_ranking_encode
+from src.main.hackathon.factory.Abstract_class import AbstractProduct
 import pandas as pd
 import numpy as np
 from sklearn.preprocessing import StandardScaler
 from sklearn.decomposition import PCA
 from sklearn.cluster import DBSCAN
-from sklearn.metrics import silhouette_score, silhouette_samples
-import matplotlib.pyplot as plt
 
-from hackathon.models.anomalyDetectionModels.modelEvaluation import calculate_silhouette_scores
+from src.main.hackathon.models.anomalyDetectionModels.modelEvaluation import calculate_silhouette_scores
 
 class ModelTraining(AbstractProduct):
     def __init__(self, config):
         self.config = config
-        self.train_data_path = config.get('data', 'train_data_path')
-        self.test_data_path = config.get('data', 'test_data_path')
-        self.final_data_path = config.get('data', 'final_data_path')
-        self.missingvalue_features_90 = config.get('data', 'missingvalue_features_90')
-        self.low_variance_numerical_features = config.get('data', 'low_variance_numerical_features')
-        self.high_correlation_features = config.get('data', 'high_correlation_features')
-        self.single_value_features = config.get('data', 'single_value_features')
-        self.all_dropped_features = config.get('data', 'all_dropped_features')
-        self.final_features = config.get('data', 'final_features')
-        self.numerical_features_mean_median = config.get('data', 'numerical_features_mean_median')
-        self.categorical_features_mode = config.get('data', 'categorical_features_mode')
-        self.features_mean = config.get('data', 'features_mean')
-        self.features_median = config.get('data', 'features_median')
-        self.encoding_file = config.get('data', 'encoding_file')
-        self.test_data_size = config.get('data', 'test_data_size')
-        self.random_state = config.get('data', 'random_state')
-        self.anomaly_data_path = config.get('model', 'anomalies_path')
-        self.model_path = config.get('model', 'model_path')
-        self.predictions_path = config.get('model', 'predictions_path')
-        self.scores_path_train = config.get('model', 'scores_path_train')
-        self.scores_path_test = config.get('model', 'scores_path_test')
-        self.pca_n_components = config.get('model', 'pca')['n_components']
-        self.pca_enable = config.get('model', 'pca')['enable']
-        self.model_name = config.get('model', 'model_name')
-        self.model_params = config.get('model', 'model_params')
+        self.train_data_path = config.get_config('data', 'train_data_path')
+        self.test_data_path = config.get_config('data', 'test_data_path')
+        self.final_data_path = config.get_config('data', 'final_data_path')
+        self.missingvalue_features_90 = config.get_config('data', 'missingvalue_features_90')
+        self.low_variance_numerical_features = config.get_config('data', 'low_variance_numerical_features')
+        self.high_correlation_features = config.get_config('data', 'high_correlation_features')
+        self.single_value_features = config.get_config('data', 'single_value_features')
+        self.all_dropped_features = config.get_config('data', 'all_dropped_features')
+        self.final_features = config.get_config('data', 'final_features')
+        self.numerical_features_mean_median = config.get_config('data', 'numerical_features_mean_median')
+        self.categorical_features_mode = config.get_config('data', 'categorical_features_mode')
+        self.features_mean = config.get_config('data', 'features_mean')
+        self.features_median = config.get_config('data', 'features_median')
+        self.encoding_file = config.get_config('data', 'encoding_file')
+        self.test_data_size = config.get_config('data', 'test_data_size')
+        self.random_state = config.get_config('data', 'random_state')
+        self.anomaly_data_path = config.get_config('model', 'anomalies_path')
+        self.model_path = config.get_config('model', 'model_path')
+        self.predictions_path = config.get_config('model', 'predictions_path')
+        self.scores_path_train = config.get_config('model', 'scores_path_train')
+        self.scores_path_test = config.get_config('model', 'scores_path_test')
+        self.pca_n_components = config.get_config('model', 'pca')['n_components']
+        self.pca_enable = config.get_config('model', 'pca')['enable']
+        self.model_name = config.get_config('model', 'model_name')
+        self.model_params = config.get_config('model', 'model_params')
 
     def initiate_processing(self):
         print("Initiating Model Training")
@@ -57,7 +55,7 @@ class ModelTraining(AbstractProduct):
         missing_percentage = self.data.isnull().sum() / len(self.data)
         drop_cols = missing_percentage[missing_percentage > 0.9].index.tolist()
         self.data.drop(drop_cols, axis=1, inplace=True)
-        drop_cols_df = pd.DataFrame({'feature': drop_cols},{'missing_percentage': missing_percentage[missing_percentage > 0.9]})
+        drop_cols_df = pd.DataFrame({'feature': drop_cols})
         drop_cols_df.to_csv(self.missingvalue_features_90, index=False)
 
         # handling date time features
@@ -72,7 +70,8 @@ class ModelTraining(AbstractProduct):
         variance = self.data[numerical_features].var()
         low_variance_cols = variance[variance < 0.1].index.tolist()
         self.data.drop(low_variance_cols, axis=1, inplace=True)
-        low_variance_cols_df = pd.DataFrame({'feature': drop_cols},{'variance':variance[low_variance_cols]})
+        # save low variance features to csv
+        low_variance_cols_df = pd.DataFrame({'feature': low_variance_cols})
         low_variance_cols_df.to_csv(self.low_variance_numerical_features, index=False)
 
         # drop feature with single value
@@ -106,10 +105,6 @@ class ModelTraining(AbstractProduct):
         # find all numerical features - updated
         numerical_features = [feature for feature in self.data.columns if self.data[feature].dtype != 'O' and self.data[feature].dtype != 'datetime64[ns]']
 
-        # standardize the data
-        scaler = StandardScaler()
-        self.data = scaler.fit_transform(self.data)
-
         # drop highly correlated features
         corr_matrix = self.data.corr().abs()
         upper = corr_matrix.where(np.triu(np.ones(corr_matrix.shape), k=1).astype(np.bool))
@@ -122,17 +117,14 @@ class ModelTraining(AbstractProduct):
         all_dropped_features = drop_cols + low_variance_cols + single_value_cols + to_drop
         all_dropped_features_df = pd.DataFrame({'feature': all_dropped_features})
         all_dropped_features_df.to_csv(self.all_dropped_features, index=False)
-
+        # standardize the data
+        scaler = StandardScaler()
+        self.data = scaler.fit_transform(self.data)
+        self.pca_df = self.data
         # perform PCA
         if self.pca_enable:
             pca = PCA(n_components=self.pca_n_components)
-            self.data = pca.fit_transform(self.data)
-            self.pca_df = pd.DataFrame({'feature': self.data.columns})
-        # add unique identifier back to the data
-        self.pca_df['IdentifierValue'] = self.uniqueID
-
-        # save the final data to csv
-        self.pca_df.to_csv(self.final_data_path, index=False)
+            self.pca_df = pca.fit_transform(self.data)
     
     def handle_missing_values(self):
         # handling missing values
@@ -222,7 +214,7 @@ class ModelTraining(AbstractProduct):
         print('saved anomalies to csv')
 
         # write to csv
-        retrieved_datapoints.to_csv('/content/drive/MyDrive/CodeCrafters_WF/Model Input Data/Data/retrieved_datapoints.csv', index=False)
+        retrieved_datapoints.to_csv(self.anomaly_data_path, index=False)
     def fit_model(self):
         print("Training Model")
         DBSCAN_model = DBSCAN(**self.model_params['DBSCAN'])
@@ -232,7 +224,7 @@ class ModelTraining(AbstractProduct):
         DBSCAN_model_labels = DBSCAN_model.labels_
         
         # Assuming 'labels' is the output from your DBSCAN clustering
-        unique_id = self.pca_df['IdentifierValue']
+        unique_id = self.uniqueID
         labels_with_unique_id = pd.DataFrame({'unique_id': unique_id, 'cluster_label': DBSCAN_model_labels})
         labels_with_unique_id.to_csv(self.predictions_path, index=False)
 

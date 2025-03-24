@@ -1,20 +1,20 @@
 data:
-  train_data_path : code/src/resources/dataInput/train.csv
-  test_data_path : code/src/resources/dataInput/test.csv
-  final_data_path : code/src/resources/dataInput/processedData/final_data.csv
-  missingvalue_features_90: code/src/resources/dataInput/processedData/missingvalue_features_90.csv
-  low_variance_numerical_features: code/src/resources/dataInput/processedData/low_variance_numerical_features.csv
-  high_correlation_features: code/src/resources/dataInput/processedData/high_correlation_features.csv
-  single_value_features: code/src/resources/dataInput/processedData/single_value_features.csv
-  all_dropped_features:  code/src/resources/dataInput/processedData/all_dropped_features.csv
-  final_features: code/src/resources/dataInput/processedData/final_features_list.xlsv
-  numerical_features_mean_median: code/src/resources/dataInput/processedData/numerical_features_mean_median.csv
-  categorical_features_mode: code/src/resources/dataInput/processedData/categorical_features_mode.csv
-  features_mean: code/src/resources/dataInput/processedData/features_mean.csv
-  features_median: code/src/resources/dataInput/processedData/features_median.csv
-  encoding_file: code/src/resources/dataInput/processedData/encoding_file.csv
-  prompt: code/src/resources/dataInput/prompt.csv
-  validation_code: code/src/main/hackathon/models/validations/validation_code.csv
+  train_data_path : src/resources/dataInput/train.csv
+  test_data_path : src/resources/dataInput/test.csv
+  final_data_path : src/resources/dataInput/processedData/final_data.csv
+  missingvalue_features_90: src/resources/dataInput/processedData/missingvalue_features_90.csv
+  low_variance_numerical_features: src/resources/dataInput/processedData/low_variance_numerical_features.csv
+  high_correlation_features: src/resources/dataInput/processedData/high_correlation_features.csv
+  single_value_features: src/resources/dataInput/processedData/single_value_features.csv
+  all_dropped_features:  src/resources/dataInput/processedData/all_dropped_features.csv
+  final_features: src/resources/dataInput/processedData/final_features_list.xlsv
+  numerical_features_mean_median: src/resources/dataInput/processedData/numerical_features_mean_median.csv
+  categorical_features_mode: src/resources/dataInput/processedData/categorical_features_mode.csv
+  features_mean: src/resources/dataInput/processedData/features_mean.csv
+  features_median: src/resources/dataInput/processedData/features_median.csv
+  encoding_file: src/resources/dataInput/processedData/encoding_file.csv
+  prompt: src/resources/dataInput/prompt.txt
+  validation_code: src/main/hackathon/models/validations/validations.py
   test_data_size: 0.15
   random_state: 42
 
@@ -22,18 +22,14 @@ model:
   pca:
     n_components: 0.9
     enable: true
-  model_path: code/src/resources/model/anomalyDetection.pkl
-  predictions_path: code/src/resources/dataOutput/predictions.csv
-  anomalies_path: code/src/resources/dataOutput/anomalies.csv
-  scores_path_train: code/src/resources/dataOutput/scores_train.csv
-  scores_path_test: code/src/resources/dataOutput/scores_test.csv
+  model_path: src/resources/model/anomalyDetection.pkl
+  predictions_path: src/resources/dataOutput/predictions.csv
+  anomalies_path: src/resources/dataOutput/anomalies.csv
+  final_anomalies_path: src/resources/dataOutput/final_anomalies.csv
+  scores_path_train: src/resources/dataOutput/scores_train.csv
+  scores_path_test: src/resources/dataOutput/scores_test.csv
   model_name: ['DBSCAN']
   model_params:
     DBSCAN:
       eps: 8
       min_samples: 5
-      metric: 'euclidean'
-      algorithm: 'auto'
-      leaf_size: 30
-      p: None
-      n_jobs: None

@@ -1,0 +1,6 @@
+scikit-learn
+pandas
+np
+matplotlib
+PyYAML
+google.generativeai

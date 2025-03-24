@@ -1,9 +1,9 @@
 import sys
 
-from hackathon.common.utils.configLoader import ConfigLoader
-from hackathon.models.anomalyDetectionModels.modelTraining import ModelTraining
-from hackathon.models.llm import get_gemini_response
-from hackathon.models.validations.anomalyVerification import VerifyAnomalies
+from src.main.hackathon.common.utils.configLoader import ConfigLoader
+from src.main.hackathon.models.anomalyDetectionModels.modelTraining import ModelTraining
+from src.main.hackathon.models.llm import get_gemini_response
+from src.main.hackathon.models.validations.anomalyVerification import VerifyAnomalies
 
 class RegulatoryReportingFactory:
     def __init__(self):
@@ -18,7 +18,9 @@ class RegulatoryReportingFactory:
         print('validation code generated')
         modelTrainer = ModelTraining(self.config)
         modelTrainer.process()
-        # anomalyVerification = VerifyAnomalies(self.config)
+        anomalyVerification = VerifyAnomalies(self.config)
+        anomalyVerification.verify()
+        print('Report generated successfully')
 
     def read_prompt_file(self):
         try:
