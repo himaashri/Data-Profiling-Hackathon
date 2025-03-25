@@ -44,6 +44,7 @@ class ModelTraining(AbstractProduct):
     def read_data(self):
         print("Reading Data")
         self.data = pd.read_csv(self.train_data_path)
+        self.data_copy = pd.read_csv(self.train_data_path)
         self.uniqueID = self.data['IdentifierValue']
         self.data.drop(['IdentifierValue'], axis=1, inplace=True)
 
@@ -227,7 +228,7 @@ class ModelTraining(AbstractProduct):
         unique_id = self.uniqueID
         labels_with_unique_id = pd.DataFrame({'unique_id': unique_id, 'cluster_label': DBSCAN_model_labels})
         labels_with_unique_id.to_csv(self.predictions_path, index=False)
-
+        self.filtered_df = pd.DataFrame(columns=self.data_copy.columns)
         #calculate silhoutte scores
         average_silhoutte_scores=calculate_silhouette_scores(self.pca_df,DBSCAN_model_labels)
         if average_silhoutte_scores:
