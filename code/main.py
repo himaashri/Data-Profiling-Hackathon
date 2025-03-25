@@ -3,17 +3,16 @@ import streamlit as st
 import os
 import pandas as pd
 
-# Add a logo to the Streamlit app
+
 st.markdown(
     """
-    <div style="display: flex; justify-content: space-between; align-items: center;">
-        <h1 style="margin: 0;">RegMind - Regulatory Reporting Made Easy</h1>
-        <img src="src/resources/logo.png" width="100" alt="RegMind Logo">
-    </div>
+    <h1 style="display: inline-block; vertical-align: middle; margin-left: 20px;">RegMind - Regulatory Reporting Made Easy</h1>
     """,
     unsafe_allow_html=True
 )
 
+# Add a logo to the Streamlit app
+st.image("src/resources/logo.png", width=100)
 # Custom CSS to enhance the UI with a white and blue theme and remove white space
 st.markdown(
     """
