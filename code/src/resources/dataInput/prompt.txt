@@ -17,11 +17,70 @@ Requirements:
 6. If a value is missing or invalid, the validation message should indicate this.
 7. If a date value does not follow the specified format (yyyy-mm-dd), it should be considered a validation violation.
 8. Each validation message should be in a new line when adding validation messages.
-9. Name of the generate function should be process_anomalies_dataset
-
+9. Name of the generate function should be process_anomalies_dataset, follow the pattern in example code.
 Example validation message:
 1. HedgedRisk is 5 which is not in [1,2,3,4]
 2. HedgedCashFlow is missing
+
+Example Output:
+import pandas as pd
+from datetime import datetime
+
+def process_anomalies_dataset(csv_filepath):
+    """
+    Processes an anomalies dataset, applying validation rules and adding validation messages.
+
+    Args:
+        csv_filepath (str): The path to the CSV file containing the anomalies dataset.
+
+    Returns:
+        pandas.DataFrame: The processed DataFrame with added validation messages. Returns None if there's an error reading the file.
+    """
+    try:
+        df = pd.read_csv(csv_filepath)
+    except FileNotFoundError:
+        return None
+
+    df['ValidationMessages'] = ''
+
+    for index, row in df.iterrows():
+        messages = []
+
+        # Identifier validation
+        if row['Identifier'] not in ["CUSIP", "ISIN", "SEDOL", "Internal"]:
+            messages.append(f"Identifier is '{row['Identifier']}' which is not in ['CUSIP', 'ISIN', 'SEDOL', 'Internal']")
+
+        # Cost_USD validation
+        try:
+            cost = int(float(row['Cost_USD']))
+            if cost != round(cost):
+                messages.append("Cost_USD is not a rounded whole dollar amount")
+        except (ValueError, TypeError):
+            messages.append("Cost_USD is missing or invalid")
+
+        # Intent validation
+        if row['Intent'] not in ["AFS", "HTM", "EQ"]:
+            messages.append(f"Intent is '{row['Intent']}' which is not in ['AFS', 'HTM', 'EQ']")
+
+        # Risk validation
+        try:
+            risk = int(row['Risk'])
+            if risk not in [1, 2, 3, 4]:
+                messages.append(f"Risk is {risk} which is not in [1, 2, 3, 4]")
+        except (ValueError, TypeError):
+            messages.append("Risk is missing or invalid")
+
+        # Horizon validation
+        try:
+            datetime.strptime(row['Horizon'], '%Y-%m-%d')
+        except ValueError:
+            messages.append("Horizon is not in yyyy-mm-dd format")
+        except TypeError:
+            messages.append("Horizon is missing or invalid")
+
+        df.loc[index, 'ValidationMessages'] = '\n'.join(messages)
+
+    return df
 
 Please generate the Python function according to the guidelines above.
 Do not give any comments. I want only code.

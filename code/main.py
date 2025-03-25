@@ -45,7 +45,10 @@ def run_command():
 def paginate_dataframe(df, page_size, page_num):
     start_idx = (page_num - 1) * page_size
     end_idx = start_idx + page_size
-    return df.iloc[start_idx:end_idx]
+    paginated_df = df.iloc[start_idx:end_idx]
+    # Replace \n with <br> for HTML rendering
+    paginated_df = paginated_df.applymap(lambda x: x.replace('\n', '<br>') if isinstance(x, str) else x)
+    return paginated_df
 
 # Progress stepper
 st.markdown(f"### Step {st.session_state.step} of 4")
@@ -115,7 +118,7 @@ if st.session_state.processing_done:
 
         paginated_df = paginate_dataframe(df, page_size, current_page)
         st.markdown('<div class="dataframe-container">', unsafe_allow_html=True)
-        st.write(paginated_df.to_html(index=False, classes='dataframe-container'), unsafe_allow_html=True)
+        st.write(paginated_df.to_html(index=False, classes='dataframe-container', escape=False), unsafe_allow_html=True)
         st.markdown('</div>', unsafe_allow_html=True)
 
         # Pagination controls
