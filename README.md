@@ -96,20 +96,25 @@ The project implements an end-to-end pipeline for data profiling, anomaly detect
 Briefly outline the technologies, frameworks, and tools used in development.
 
 ## 🚧 Challenges We Faced
-Describe the major technical or non-technical challenges your team encountered.
+1. Connecting with the appropriate LLM model using an API key was a significant challenge, despite the availability of many free models.
+2. Generating accurate validation code using prompts was another major challenge.
 
 ## 🏃 How to Run
 1. Clone the repository  
    ```sh
    git clone https://github.com/your-repo.git
    ```
-2. Install dependencies  
+2. Change directory 
    ```sh
-   npm install  # or pip install -r requirements.txt (for Python)
+   cd code
    ```
-3. Run the project  
+3. Install dependencies  
    ```sh
-   npm start  # or python app.py
+   pip install -r requirements.txt
+   ```
+4. Run the project  
+   ```sh
+   streamlit run main.py
    ```
 
 
