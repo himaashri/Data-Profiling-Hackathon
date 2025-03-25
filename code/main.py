@@ -3,73 +3,12 @@ import streamlit as st
 import os
 import pandas as pd
 
-
-st.markdown(
-    """
-    <h1 style="display: inline-block; vertical-align: middle; margin-left: 20px;">RegMind - Regulatory Reporting Made Easy</h1>
-    """,
-    unsafe_allow_html=True
-)
-
 # Add a logo to the Streamlit app
-st.image("src/resources/logo.png", width=100)
-# Custom CSS to enhance the UI with a white and blue theme and remove white space
 st.markdown(
     """
-    <style>
-    .css-18e3th9, .css-1d391kg, .css-1v3fvcr {
-        padding: 0;
-    }
-    .css-18e3th9 {
-        background-color: white;
-    }
-    .stButton>button {
-        background-color: #007BFF;
-        color: white;
-        border: none;
-        padding: 10px 24px;
-        text-align: center;
-        text-decoration: none;
-        display: inline-block;
-        font-size: 16px;
-        margin: 4px 2px;
-        cursor: pointer;
-        border-radius: 8px;
-    }
-    .stButton>button:hover {
-        background-color: #0056b3;
-        color: white; /* Ensure text color remains white on hover */
-    }
-    .stProgress > div > div > div > div {
-        background-color: #007BFF;
-    }
-    .stFileUploader {
-        border: 2px dashed #007BFF;
-        border-radius: 8px;
-        padding: 10px;
-    }
-    .stFileUploader:hover {
-        border-color: #0056b3;
-    }
-    .dataframe-container {
-        overflow-x: auto;
-        overflow-y: auto;
-        background-color: white;
-        padding: 10px;
-        border-radius: 8px;
-        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
-        max-height: 400px; /* Set a fixed height for vertical scrolling */
-    }
-    .dataframe-container table {
-        width: 100%;
-    }
-    .dataframe-container th {
-        text-align: center;
-    }
-    .stMarkdown {
-        color: #333;
-    }
-    </style>
+    <div style="display: flex; justify-content: space-between; align-items: center;">
+        <h1 style="margin: 0;">RegMind - Regulatory Reporting Made Easy</h1>
+    </div>
     """,
     unsafe_allow_html=True
 )
@@ -79,6 +18,8 @@ if 'step' not in st.session_state:
     st.session_state.step = 1
 if 'processing_done' not in st.session_state:
     st.session_state.processing_done = False
+if 'current_page' not in st.session_state:
+    st.session_state.current_page = 1
 
 # Function to save uploaded file with a new name and path
 def save_uploaded_file(uploaded_file, new_name, new_path):
@@ -100,6 +41,11 @@ def run_command():
     
     # Return the output of the command
     return result.stdout
+
+def paginate_dataframe(df, page_size, page_num):
+    start_idx = (page_num - 1) * page_size
+    end_idx = start_idx + page_size
+    return df.iloc[start_idx:end_idx]
 
 # Progress stepper
 st.markdown(f"### Step {st.session_state.step} of 4")
@@ -162,8 +108,24 @@ if st.session_state.processing_done:
         else:
             st.error("Whole anomaly data file not found.")
         
+        # Pagination
+        page_size = 10
+        total_pages = (len(df) + page_size - 1) // page_size
+        current_page = st.session_state.current_page
+
+        paginated_df = paginate_dataframe(df, page_size, current_page)
         st.markdown('<div class="dataframe-container">', unsafe_allow_html=True)
-        st.write(df.to_html(index=False, classes='dataframe-container'), unsafe_allow_html=True)
+        st.write(paginated_df.to_html(index=False, classes='dataframe-container'), unsafe_allow_html=True)
         st.markdown('</div>', unsafe_allow_html=True)
+
+        # Pagination controls
+        col1, col2, col3 = st.columns([1, 2, 1])
+        if col1.button("Previous"):
+            if current_page > 1:
+                st.session_state.current_page -= 1
+        col2.write(f"Page {current_page} of {total_pages}")
+        if col3.button("Next"):
+            if current_page < total_pages:
+                st.session_state.current_page += 1
     else:
         st.error("CSV file not found.")

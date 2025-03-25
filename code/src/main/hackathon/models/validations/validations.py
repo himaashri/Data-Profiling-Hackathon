@@ -2,15 +2,14 @@ import pandas as pd
 
 def process_anomalies_dataset(csv_filepath):
     """
-    Processes an anomalies dataset, applying validation rules and adding validation messages.
+    Processes an anomalies dataset based on predefined validation rules.
 
     Args:
         csv_filepath (str): The path to the CSV file containing the anomalies dataset.
 
     Returns:
-        pandas.DataFrame: The processed DataFrame with added validation messages.  Returns None if there's an error reading the file.
+        pandas.DataFrame: The processed DataFrame with added validation messages.  Returns None if the file is not found.
     """
-
     try:
         df = pd.read_csv(csv_filepath)
     except FileNotFoundError:
@@ -33,23 +32,14 @@ def process_anomalies_dataset(csv_filepath):
         "ASU2017-12HedgeDesignations": lambda x: x in [1, 2, 3],
     }
 
-    validation_messages = []
+    df['ValidationMessages'] = ''
+
     for index, row in df.iterrows():
-        row_messages = []
         for col, rule in validation_rules.items():
             value = row[col]
             if pd.isna(value):
-                row_messages.append(f"{col} is missing")
+                df.loc[index, 'ValidationMessages'] += f"{col} is missing\n"
             elif not rule(value):
-                if col == "HedgeHorizon":
-                    row_messages.append(f"{col} is not in yyyy-mm-dd format")
-                elif col in ["AmortizedCost_USDEquivalent", "MarketValue_USDEquivalent", "HedgingInstrumentAtFairValue", "EffectivePortionOfCumulativeGainsAndLosses"]:
-                    row_messages.append(f"{col} is not a rounded whole dollar amount")
+                df.loc[index, 'ValidationMessages'] += f"{col} is {value} which is invalid\n"
 
-                else:
-                    row_messages.append(f"{col} is {value} which is not in {list(set(df[col].dropna()))}")
-
-        validation_messages.append("; ".join(row_messages))
-
-    df['ValidationMessages'] = validation_messages
     return df

@@ -16,7 +16,8 @@ Requirements:
 5. The function should handle missing values and ensure that the data types are correctly validated.
 6. If a value is missing or invalid, the validation message should indicate this.
 7. If a date value does not follow the specified format (yyyy-mm-dd), it should be considered a validation violation.
-8. Name of the generate function should be process_anomalies_dataset
+8. Each validation message should be in a new line when adding validation messages.
+9. Name of the generate function should be process_anomalies_dataset
 
 Example validation message:
 1. HedgedRisk is 5 which is not in [1,2,3,4]
