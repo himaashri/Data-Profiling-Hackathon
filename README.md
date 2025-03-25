@@ -28,7 +28,9 @@ The solution is not limited to regulatory reporting but extends to other critica
 ![Screenshot 1](link-to-image)
 
 ## 💡 Inspiration
-What inspired you to create this project? Describe the problem you're solving. 123
+The banking sector relies heavily on accurate and consistent data for decision-making, compliance, and risk management. However, traditional data profiling methods are manual, time-consuming, and prone to errors, making them inefficient for handling the growing complexity and volume of financial data. 
+
+This project was inspired by the need to automate and streamline data profiling processes using cutting-edge technologies like Generative AI (LLMs) and unsupervised machine learning. By addressing challenges such as anomaly detection, validation rule generation, and remediation suggestions, this solution aims to empower banks to ensure data quality, improve operational efficiency, and meet compliance requirements with ease.
 
 ## ⚙️ What It Does
 The project implements an end-to-end pipeline for data profiling, anomaly detection, and reporting. Below is the detailed step-by-step process:
