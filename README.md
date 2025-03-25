@@ -93,17 +93,17 @@ The project implements an end-to-end pipeline for data profiling, anomaly detect
   - Generates the final report.
 
 ## 🛠️ How We Built It
-Streamlit: For building the web application interface.
-Pandas: For data manipulation and analysis.
-Subprocess: For running external commands and scripts
-Conda: For managing the Python environment and dependencies.
-Git: For version control.
-Visual Studio Code: As the integrated development environment (IDE).
-CSV: For input and output data files.
-TXT: For configuration and instruction files.
-DBSCAN: For anomaly detection.
-PCA: For dimensionality reduction (if enabled).
-Google Generative AI (Gemini): For generating Python validation code based on prompts.
+- Streamlit: For building the web application interface.
+- Pandas: For data manipulation and analysis.
+- Subprocess: For running external commands and scripts
+- Conda: For managing the Python environment and dependencies.
+- Git: For version control.
+- Visual Studio Code: As the integrated development environment (IDE).
+- CSV: For input and output data files.
+- TXT: For configuration and instruction files.
+- DBSCAN: For anomaly detection.
+- PCA: For dimensionality reduction (if enabled).
+- Google Generative AI (Gemini): For generating Python validation code based on prompts.
 
 ## 🚧 Challenges We Faced
 1. Connecting with the appropriate LLM model using an API key was a significant challenge, despite the availability of many free models.
