@@ -14,7 +14,11 @@
 ---
 
 ## 🎯 Introduction
-A brief overview of your project and its purpose. Mention which problem statement are your attempting to solve. Keep it concise and engaging.
+In the banking sector, data profiling is a critical process that ensures the accuracy, consistency, and compliance of data used for decision-making, risk management, and reporting. From regulatory reporting to fraud detection, credit risk analysis, and transaction monitoring, banks rely on high-quality data to meet operational and compliance requirements. However, traditional data profiling methods are often manual, time-consuming, and prone to errors, making them inefficient for handling the growing complexity and volume of financial data.
+
+This project introduces an AI-powered data profiling solution designed specifically for the banking industry. By leveraging Generative AI (LLMs) and unsupervised machine learning techniques, the solution automates the entire data profiling pipeline. It extracts validation rules from financial instructions, generates executable Python code for data validation, detects anomalies in datasets, and suggests remediation actions for flagged transactions.
+
+The solution is not limited to regulatory reporting but extends to other critical banking use cases, such as fraud detection, transaction monitoring, and credit risk profiling. With its modular design, scalability, and explainability, this solution empowers banks to ensure data quality, improve operational efficiency, and make informed decisions in a rapidly evolving financial landscape.
 
 ## 🎥 Demo
 🔗 [Live Demo](#) (if applicable)  
