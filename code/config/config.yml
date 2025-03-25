@@ -29,6 +29,7 @@ model:
   predictions_path: src/resources/dataOutput/predictions.csv
   anomalies_path: src/resources/dataOutput/anomalies.csv
   final_anomalies_path: src/resources/dataOutput/final_anomalies.csv
+  final_anomalies_ui_path: src/resources/dataOutput/final_anomalies_ui.csv
   scores_path_train: src/resources/dataOutput/scores_train.csv
   scores_path_test: src/resources/dataOutput/scores_test.csv
   model_name: ['DBSCAN']

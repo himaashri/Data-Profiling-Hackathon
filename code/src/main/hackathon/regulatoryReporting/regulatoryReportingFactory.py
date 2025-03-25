@@ -17,14 +17,17 @@ class RegulatoryReportingFactory:
         pass
 
     def generateReport(self):
-        print('Started generating report')
-        self.read_prompt_file()
-        print('validation code generated')
-        modelTrainer = ModelTraining(self.config)
-        modelTrainer.process()
-        anomalyVerification = VerifyAnomalies(self.config)
-        anomalyVerification.verify()
-        print('Report generated successfully')
+        print('Started generating report...')
+        try:
+            self.read_prompt_file()
+            # print('validation code generated')
+            modelTrainer = ModelTraining(self.config)
+            modelTrainer.process()
+            anomalyVerification = VerifyAnomalies(self.config)
+            anomalyVerification.verify()
+            print('Report generated successfully')
+        except:
+            print("Some Error Occurred. Please check the logs for more details")
 
     def read_prompt_file(self):
         try:
