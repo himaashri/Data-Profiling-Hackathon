@@ -1,5 +1,4 @@
 import pandas as pd
-from datetime import datetime
 
 def process_anomalies_dataset(csv_filepath):
     """
@@ -17,117 +16,40 @@ def process_anomalies_dataset(csv_filepath):
     except FileNotFoundError:
         return None
 
-    df['ValidationMessages'] = ''
+    validation_rules = {
+        "IdentifierType": lambda x: x in ["CUSIP", "ISIN", "SEDOL", "Internal"],
+        "AmortizedCost_USDEquivalent": lambda x: isinstance(x, (int, float)) and x == round(x),
+        "MarketValue_USDEquivalent": lambda x: isinstance(x, (int, float)) and x == round(x),
+        "AccountingIntent": lambda x: x in ["AFS", "HTM", "EQ"],
+        "TypeOfHedge": lambda x: x in [1, 2],
+        "HedgedRisk": lambda x: x in [1, 2, 3, 4],
+        "HedgeInterestRate": lambda x: x in [1, 2, 3, 4, 5],
+        "HedgePercentage": lambda x: isinstance(x, (int, float)) and 0 <= x <= 1,
+        "HedgeHorizon": lambda x: pd.to_datetime(x, format='%Y-%m-%d', errors='coerce').notna(),
+        "HedgedCashFlow": lambda x: x in [1, 2],
+        "Sidedness": lambda x: x in [1, 2],
+        "HedgingInstrumentAtFairValue": lambda x: isinstance(x, (int, float)) and x == round(x),
+        "EffectivePortionOfCumulativeGainsAndLosses": lambda x: isinstance(x, (int, float)) and x == round(x),
+        "ASU2017-12HedgeDesignations": lambda x: x in [1, 2, 3],
+    }
 
+    validation_messages = []
     for index, row in df.iterrows():
-        messages = []
+        row_messages = []
+        for col, rule in validation_rules.items():
+            value = row[col]
+            if pd.isna(value):
+                row_messages.append(f"{col} is missing")
+            elif not rule(value):
+                if col == "HedgeHorizon":
+                    row_messages.append(f"{col} is not in yyyy-mm-dd format")
+                elif col in ["AmortizedCost_USDEquivalent", "MarketValue_USDEquivalent", "HedgingInstrumentAtFairValue", "EffectivePortionOfCumulativeGainsAndLosses"]:
+                    row_messages.append(f"{col} is not a rounded whole dollar amount")
 
-        # IdentifierType validation
-        if row['IdentifierType'] not in ["CUSIP", "ISIN", "SEDOL", "Internal"]:
-            messages.append(f"IdentifierType '{row['IdentifierType']}' is invalid.")
+                else:
+                    row_messages.append(f"{col} is {value} which is not in {list(set(df[col].dropna()))}")
 
-        # AmortizedCost_USDEquivalent validation
-        try:
-            amortized_cost = int(row['AmortizedCost_USDEquivalent'])
-            if amortized_cost != round(amortized_cost):
-                messages.append("AmortizedCost_USDEquivalent is not a whole number.")
-        except (ValueError, TypeError):
-            messages.append("AmortizedCost_USDEquivalent is missing or invalid.")
+        validation_messages.append("; ".join(row_messages))
 
-        # MarketValue_USDEquivalent validation
-        try:
-            market_value = int(row['MarketValue_USDEquivalent'])
-            if market_value != round(market_value):
-                messages.append("MarketValue_USDEquivalent is not a whole number.")
-        except (ValueError, TypeError):
-            messages.append("MarketValue_USDEquivalent is missing or invalid.")
-
-
-        # AccountingIntent validation
-        if row['AccountingIntent'] not in ["AFS", "HTM", "EQ"]:
-            messages.append(f"AccountingIntent '{row['AccountingIntent']}' is invalid.")
-
-        # TypeOfHedge validation
-        try:
-            type_of_hedge = int(row['TypeOfHedge'])
-            if type_of_hedge not in [1, 2]:
-                messages.append(f"TypeOfHedge '{row['TypeOfHedge']}' is invalid.")
-        except (ValueError, TypeError):
-            messages.append("TypeOfHedge is missing or invalid.")
-
-        # HedgedRisk validation
-        try:
-            hedged_risk = int(row['HedgedRisk'])
-            if hedged_risk not in [1, 2, 3, 4]:
-                messages.append(f"HedgedRisk '{row['HedgedRisk']}' is invalid.")
-        except (ValueError, TypeError):
-            messages.append("HedgedRisk is missing or invalid.")
-
-        # HedgeInterestRate validation
-        try:
-            hedge_interest_rate = int(row['HedgeInterestRate'])
-            if hedge_interest_rate not in [1, 2, 3, 4, 5]:
-                messages.append(f"HedgeInterestRate '{row['HedgeInterestRate']}' is invalid.")
-        except (ValueError, TypeError):
-            messages.append("HedgeInterestRate is missing or invalid.")
-
-        # HedgePercentage validation
-        try:
-            hedge_percentage = float(row['HedgePercentage'])
-            if hedge_percentage > 1 or hedge_percentage < 0:
-                messages.append(f"HedgePercentage '{row['HedgePercentage']}' is out of range (0-1).")
-
-        except (ValueError, TypeError):
-            messages.append("HedgePercentage is missing or invalid.")
-
-        # HedgeHorizon validation
-        try:
-            datetime.strptime(row['HedgeHorizon'], '%Y-%m-%d')
-        except (ValueError, TypeError):
-            messages.append("HedgeHorizon is missing or has an invalid date format (yyyy-mm-dd).")
-
-        # HedgedCashFlow validation
-        try:
-            hedged_cash_flow = int(row['HedgedCashFlow'])
-            if hedged_cash_flow not in [1,2]:
-              messages.append(f"HedgedCashFlow '{row['HedgedCashFlow']}' is invalid.")
-        except (ValueError, TypeError):
-            messages.append("HedgedCashFlow is missing or invalid.")
-
-
-        # Sidedness validation
-        try:
-            sidedness = int(row['Sidedness'])
-            if sidedness not in [1, 2]:
-                messages.append(f"Sidedness '{row['Sidedness']}' is invalid.")
-        except (ValueError, TypeError):
-            messages.append("Sidedness is missing or invalid.")
-
-        # HedgingInstrumentAtFairValue validation
-        try:
-            hedging_instrument = int(row['HedgingInstrumentAtFairValue'])
-            if hedging_instrument != round(hedging_instrument):
-                messages.append("HedgingInstrumentAtFairValue is not a whole number.")
-        except (ValueError, TypeError):
-            messages.append("HedgingInstrumentAtFairValue is missing or invalid.")
-
-
-        # EffectivePortionOfCumulativeGainsAndLosses validation
-        try:
-            effective_portion = int(row['EffectivePortionOfCumulativeGainsAndLosses'])
-            if effective_portion != round(effective_portion):
-                messages.append("EffectivePortionOfCumulativeGainsAndLosses is not a whole number.")
-        except (ValueError, TypeError):
-            messages.append("EffectivePortionOfCumulativeGainsAndLosses is missing or invalid.")
-
-        # ASU2017-12HedgeDesignations validation
-        try:
-            asu_designation = int(row['ASU2017-12HedgeDesignations'])
-            if asu_designation not in [1, 2, 3]:
-                messages.append(f"ASU2017-12HedgeDesignations '{row['ASU2017-12HedgeDesignations']}' is invalid.")
-        except (ValueError, TypeError):
-            messages.append("ASU2017-12HedgeDesignations is missing or invalid.")
-
-        df.loc[index, 'ValidationMessages'] = '; '.join(messages) if messages else 'No validation errors.'
-
+    df['ValidationMessages'] = validation_messages
     return df

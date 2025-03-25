@@ -3,15 +3,72 @@ import streamlit as st
 import os
 import pandas as pd
 
-# Custom CSS to change the background color to white
+# Add a logo to the Streamlit app
+st.markdown(
+    """
+    <div style="display: flex; justify-content: space-between; align-items: center;">
+        <h1 style="margin: 0;">RegMind - Regulatory Reporting Made Easy</h1>
+        <img src="src/resources/logo.png" width="100" alt="RegMind Logo">
+    </div>
+    """,
+    unsafe_allow_html=True
+)
+
+# Custom CSS to enhance the UI with a white and blue theme and remove white space
 st.markdown(
     """
     <style>
+    .css-18e3th9, .css-1d391kg, .css-1v3fvcr {
+        padding: 0;
+    }
     .css-18e3th9 {
         background-color: white;
     }
+    .stButton>button {
+        background-color: #007BFF;
+        color: white;
+        border: none;
+        padding: 10px 24px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 16px;
+        margin: 4px 2px;
+        cursor: pointer;
+        border-radius: 8px;
+    }
+    .stButton>button:hover {
+        background-color: #0056b3;
+        color: white; /* Ensure text color remains white on hover */
+    }
+    .stProgress > div > div > div > div {
+        background-color: #007BFF;
+    }
+    .stFileUploader {
+        border: 2px dashed #007BFF;
+        border-radius: 8px;
+        padding: 10px;
+    }
+    .stFileUploader:hover {
+        border-color: #0056b3;
+    }
     .dataframe-container {
         overflow-x: auto;
+        overflow-y: auto;
+        background-color: white;
+        padding: 10px;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+        max-height: 400px; /* Set a fixed height for vertical scrolling */
+    }
+    .dataframe-container table {
+        width: 100%;
+    }
+    .dataframe-container th {
+        text-align: center;
+    }
+    .stMarkdown {
+        color: #333;
     }
     </style>
     """,
@@ -21,6 +78,8 @@ st.markdown(
 # Initialize session state
 if 'step' not in st.session_state:
     st.session_state.step = 1
+if 'processing_done' not in st.session_state:
+    st.session_state.processing_done = False
 
 # Function to save uploaded file with a new name and path
 def save_uploaded_file(uploaded_file, new_name, new_path):
@@ -82,27 +141,30 @@ if st.session_state.step == 4:
             output = run_command()
             st.write("Progress:")
             st.code(output)
-            
-            # Display the CSV file in a scrollable table
-            csv_file_path = "src/resources/dataOutput/final_anomalies_ui.csv"
-            if os.path.exists(csv_file_path):
-                df = pd.read_csv(csv_file_path)
-                st.write("Anomaly Data:")
-                st.markdown('<div class="dataframe-container">', unsafe_allow_html=True)
-                st.dataframe(df, height=400, use_container_width=True)
-                st.markdown('</div>', unsafe_allow_html=True)
-                
-                # Add download button for the whole anomaly data
-                whole_anomaly_data_path = "src/resources/dataOutput/final_anomalies.csv"
-                if os.path.exists(whole_anomaly_data_path):
-                    with open(whole_anomaly_data_path, "rb") as file:
-                        btn = st.download_button(
-                            label="Download Whole Anomaly Data",
-                            data=file,
-                            file_name="whole_anomaly_data.csv",
-                            mime="text/csv"
-                        )
-                else:
-                    st.error("Whole anomaly data file not found.")
-            else:
-                st.error("CSV file not found.")
+            st.session_state.processing_done = True
+
+# Display the CSV file in a scrollable table if processing is done
+if st.session_state.processing_done:
+    csv_file_path = "src/resources/dataOutput/final_anomalies_ui.csv"
+    if os.path.exists(csv_file_path):
+        df = pd.read_csv(csv_file_path)
+        st.write("Anomaly Data:")
+        
+        # Add download button for the whole anomaly data
+        whole_anomaly_data_path = "src/resources/dataOutput/final_anomalies.csv"
+        if os.path.exists(whole_anomaly_data_path):
+            with open(whole_anomaly_data_path, "rb") as file:
+                btn = st.download_button(
+                    label="Download Whole Anomaly Data",
+                    data=file,
+                    file_name="whole_anomaly_data.csv",
+                    mime="text/csv"
+                )
+        else:
+            st.error("Whole anomaly data file not found.")
+        
+        st.markdown('<div class="dataframe-container">', unsafe_allow_html=True)
+        st.write(df.to_html(index=False, classes='dataframe-container'), unsafe_allow_html=True)
+        st.markdown('</div>', unsafe_allow_html=True)
+    else:
+        st.error("CSV file not found.")
