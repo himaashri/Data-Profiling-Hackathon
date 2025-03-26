@@ -53,16 +53,7 @@ The project implements an end-to-end pipeline for data profiling, anomaly detect
   - The `get_gemini_response` function uses the Google Generative AI (Gemini) model to generate Python validation code based on the prompt.
   - The generated code is saved to `validations.py`.
 
-### Step 3: Data Validation
-**Objective:** Validate the anomalies dataset based on the generated validation rules.  
-**Implementation:**  
-- The `process_anomalies_dataset` function in `validations.py`:
-  - Reads the anomalies dataset (CSV file).
-  - Applies validation rules (e.g., checking valid identifier types, rounding numeric values, ensuring valid date formats).
-  - Adds validation messages to a new column (`Validation_Messages`) in the dataset.
-  - Saves the processed dataset to a new file.
-
-### Step 4: Data Preprocessing
+### Step 3: Data Preprocessing
 **Objective:** Prepare the dataset for anomaly detection by cleaning and transforming the data.  
 **Implementation:**  
 - The `ModelTraining` class handles preprocessing:
@@ -71,21 +62,21 @@ The project implements an end-to-end pipeline for data profiling, anomaly detect
   - **Encoding:** Encode categorical features using frequency ranking.
   - **Date-Time Features:** Convert date-time columns into multiple components (e.g., year, month, day).
 
-### Step 5: Anomaly Detection
+### Step 4: Anomaly Detection
 **Objective:** Identify anomalies in the dataset using clustering algorithms.  
 **Implementation:**  
 - The DBSCAN algorithm is used for anomaly detection.
 - If PCA is enabled, dimensionality reduction is applied to retain 90% of the variance.
 - The model is trained on the processed dataset, and predictions are saved to an output file.
 
-### Step 6: Anomaly Verification
+### Step 5: Anomaly Verification
 **Objective:** Verify and save the anomalies detected by the model.  
 **Implementation:**  
 - The `VerifyAnomalies` class:
   - Reads the anomalies dataset and applies the validation rules using the `process_anomalies_dataset` function.
   - Saves the verified anomalies to a final output file.
 
-### Step 7: Report Generation
+### Step 6: Report Generation
 **Objective:** Generate a comprehensive report summarizing the validation and anomaly detection results.  
 **Implementation:**  
 - The `RegulatoryReportingFactory` class orchestrates the entire pipeline:
