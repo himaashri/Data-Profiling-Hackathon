@@ -21,7 +21,7 @@ This project introduces an AI-powered data profiling solution designed specifica
 The solution is not limited to regulatory reporting but extends to other critical banking use cases, such as fraud detection, transaction monitoring, and credit risk profiling. With its modular design, scalability, and explainability, this solution empowers banks to ensure data quality, improve operational efficiency, and make informed decisions in a rapidly evolving financial landscape.
 
 ## 🎥 Demo
-📹 [Video Demo](https://drive.google.com/file/d/14r_TKOOzSOymkMn0FXyu31eCH4Tvegzu/view?usp=sharing) (if applicable)  
+📹 [Video Demo](https://drive.google.com/file/d/14r_TKOOzSOymkMn0FXyu31eCH4Tvegzu/view?usp=sharing)   
 
 
 ## 💡 Inspiration
