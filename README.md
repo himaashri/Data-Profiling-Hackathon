@@ -128,6 +128,7 @@ The project implements an end-to-end pipeline for data profiling, anomaly detect
 ### Data Processing:
 - **pandas**: For data manipulation and preprocessing.
 - **numpy**: For numerical computations.
+- **streamlit**: For UI.
 
 ### Machine Learning:
 - **scikit-learn**: For PCA, DBSCAN, and clustering.
