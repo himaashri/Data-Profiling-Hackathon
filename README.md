@@ -150,9 +150,9 @@ The project implements an end-to-end pipeline for data profiling, anomaly detect
 - **Visual Studio Code**: IDE for development.
 
 ## 👥 Team
-- **Himasree** - [GitHub](#) | [LinkedIn](#)
-- **Talveen** - [GitHub](#) | [LinkedIn](#)
-- **Subhojit** - [GitHub](#) | [LinkedIn](#)
+- **Himasree** - [GitHub](https://github.com/himaashri) | [LinkedIn](#)
+- **Talveen** - [GitHub](https://github.com/Talveen) | [LinkedIn](https://www.linkedin.com/in/talveenrakhra/)
+- **Subhojit** - [GitHub](https://github.com/subhojit-13) | [LinkedIn](https://www.linkedin.com/in/subhojit-paul/)
 - **Venkat** - [GitHub](#) | [LinkedIn](#)
-- **Naveen** - [GitHub](#) | [LinkedIn](#)
+- **Naveen** - [GitHub](https://github.com/naveenanem22) | [LinkedIn](https://www.linkedin.com/in/naveenanem-32992b52/)
 ````
