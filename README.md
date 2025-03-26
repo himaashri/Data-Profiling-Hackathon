@@ -46,8 +46,8 @@ The project implements an end-to-end pipeline for data profiling, anomaly detect
 **Implementation:**  
 - **Input Files:**
   - `prompt.txt`: Base prompt for generating validation code. 
-  - `Instruction.txt`: Contains validation rules or regulatory instructions. (*by user*)
-  - `column_descriptionss.txt`: Describes the columns in the dataset. (*by user*)
+  - `Instructions.txt`: Contains validation rules or regulatory instructions. (*by user*)
+  - `column_descriptions.txt`: Describes the columns in the dataset. (*by user*)
   - `data.scv`: Dataset to check anomalies. (*by user*)
 - **Process:**
   - The `append_file_contents_to_prompt` function combines the above files into a single prompt (`final_prompt.txt`).
