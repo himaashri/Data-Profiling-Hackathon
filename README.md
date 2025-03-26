@@ -48,6 +48,7 @@ The project implements an end-to-end pipeline for data profiling, anomaly detect
   - `prompt.txt`: Base prompt for generating validation code. 
   - `Instruction.txt`: Contains validation rules or regulatory instructions. (*by user*)
   - `column_descriptionss.txt`: Describes the columns in the dataset. (*by user*)
+  - `data.scv`: Dataset to check anomalies. (*by user*)
 - **Process:**
   - The `append_file_contents_to_prompt` function combines the above files into a single prompt (`final_prompt.txt`).
   - The `get_gemini_response` function uses the Google Generative AI (Gemini) model to generate Python validation code based on the prompt.
