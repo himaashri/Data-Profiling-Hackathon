@@ -65,12 +65,14 @@ The project implements an end-to-end pipeline for data profiling, anomaly detect
 - The DBSCAN algorithm is used for anomaly detection.
 - If PCA is enabled, dimensionality reduction is applied to retain 90% of the variance.
 - The model is trained on the processed dataset, and predictions are saved to an output file.
+- DBSCAN model generated 1 anomaly, but as there is a another cluster with only 30 data points, we have considered that cluster to be anomalies as well. there is no harm in detecting 10 extra but there is more harm in missing 1!
 
 ### Step 5: Anomaly Verification
 **Objective:** Verify and save the anomalies detected by the model.  
 **Implementation:**  
 - The `VerifyAnomalies` class:
   - Reads the anomalies dataset and applies the validation rules using the `process_anomalies_dataset` function.
+  - The validation code that we generated using LLM can handle very specific format instructions as well! 
   - Saves the verified anomalies to a final output file.
 
 ### Step 6: Report Generation
