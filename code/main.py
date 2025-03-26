@@ -87,8 +87,8 @@ if st.session_state.step == 4:
             import time
             time.sleep(3)
             output = run_command()
-            st.write("Progress:")
-            st.code(output)
+            # st.write("Progress:")
+            # st.code(output)
             st.session_state.processing_done = True
 
 # Display the CSV file in a scrollable table if processing is done
