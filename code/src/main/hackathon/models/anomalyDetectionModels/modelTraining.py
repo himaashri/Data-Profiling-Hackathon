@@ -39,16 +39,18 @@ class ModelTraining(AbstractProduct):
         self.model_params = config.get_config('model', 'model_params')
 
     def initiate_processing(self):
-        print("Initiating Model Training")
+        # print("Initiating Model Training")
+        return
 
     def read_data(self):
-        print("Reading Data")
+        # print("Reading Data")
         self.data = pd.read_csv(self.train_data_path)
+        self.data_copy = pd.read_csv(self.train_data_path)
         self.uniqueID = self.data['IdentifierValue']
         self.data.drop(['IdentifierValue'], axis=1, inplace=True)
 
     def preprocess_data(self):
-        print("Preprocessing Data")
+        # print("Preprocessing Data")
         self.data.replace(['','NULL','np','null','missing'], np.nan, inplace=True)
 
         # dropping columns with more than 90% missing values
@@ -211,12 +213,12 @@ class ModelTraining(AbstractProduct):
         retrieved_datapoints = df_copy[df_copy['IdentifierValue'].isin(identifier_values_to_retrieve)]
 
         retrieved_datapoints.to_csv(self.anomaly_data_path, index=False)
-        print('saved anomalies to csv')
+        # print('saved anomalies to csv')
 
         # write to csv
         retrieved_datapoints.to_csv(self.anomaly_data_path, index=False)
     def fit_model(self):
-        print("Training Model")
+        # print("Training Model")
         DBSCAN_model = DBSCAN(**self.model_params['DBSCAN'])
         self.labels = DBSCAN_model.fit_predict(self.pca_df)
         with open(self.model_path, 'wb') as file:
@@ -227,7 +229,7 @@ class ModelTraining(AbstractProduct):
         unique_id = self.uniqueID
         labels_with_unique_id = pd.DataFrame({'unique_id': unique_id, 'cluster_label': DBSCAN_model_labels})
         labels_with_unique_id.to_csv(self.predictions_path, index=False)
-
+        self.filtered_df = pd.DataFrame(columns=self.data_copy.columns)
         #calculate silhoutte scores
         average_silhoutte_scores=calculate_silhouette_scores(self.pca_df,DBSCAN_model_labels)
         if average_silhoutte_scores:
@@ -241,19 +243,20 @@ class ModelTraining(AbstractProduct):
                 labels_with_unique_id.cluster_label.isin(cluster_labels_below_threshold)
             ]
 
-            print(
-                "Cluster labels with average silhouette score less than 0.7:",
-                self.filtered_df.cluster_label.unique(),
-            )
-            print(self.filtered_df)
+            # print(
+            #     "Cluster labels with average silhouette score less than 0.7:",
+            #     self.filtered_df.cluster_label.unique(),
+            # )
+            # print(self.filtered_df)
         else:
-            print("No clusters found or silhouette scores not calculated.")
+            # print("No clusters found or silhouette scores not calculated.")
+            return
    
     def process(self):
-        print("Processing")
+        # print("Processing")
         self.initiate_processing()
         self.read_data()
         self.preprocess_data()
         self.fit_model()
         self.get_anomalies()
-        print("Processing Completed")
+        # print("Processing Completed")

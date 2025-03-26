@@ -27,13 +27,13 @@ def calculate_silhouette_scores(df,labels):
       cluster_silhouette_scores[label] = silhouette_scores[cluster_indices]
     for label,score in cluster_silhouette_scores.items():
       avg_score = score.mean()
-      print(f"Cluster {label}: Average Silhouette Score = {avg_score:.2f}")
+    #   print(f"Cluster {label}: Average Silhouette Score = {avg_score:.2f}")
       avg_silhouette_scores[label] = avg_score
-      print(score)
-      print()
+    #   print(score)
+    #   print()
 
-    print("the average silhouette score is",silhouette_score(df,labels))
+    # print("the average silhouette score is",silhouette_score(df,labels))
     return avg_silhouette_scores
   else:
-    print("No clusters found")
+    # print("No clusters found")
     return None

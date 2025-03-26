@@ -2,7 +2,7 @@
 from src.main.hackathon.regulatoryReporting.regulatoryReportingFactory import RegulatoryReportingFactory
 
 def main():
-    print('Hurray!! Started')
+    # print('Hurray!! Started')
     factory = RegulatoryReportingFactory()
     factory.generateReport()
 

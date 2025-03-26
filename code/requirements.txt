@@ -4,3 +4,4 @@ np
 matplotlib
 PyYAML
 google.generativeai
+streamlit
